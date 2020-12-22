@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body>
+    <form method="POST">
+        {% csrf_token %}
+        <select name="family_member">
+            {% for member in members %}
+            <option value="{{ member.name }}">{{ member.name }}</option>
+            {% endfor %}
+            <option value="new">Dodaj członka rodziny</option>
+        </select><br><br>
+        <input type="text" name="new_family_member" placeholder="Imię nowego członka rodziny"><br>
+        <button type="submit">Zaloguj</button><br>
+        {% if error %}
+            {{ error }}
+        {% endif %}
+    </form>
+</body>
+</html>
