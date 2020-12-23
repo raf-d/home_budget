@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from budget_app.models import FamilyMember
+from budget_app.models import FamilyMember, Category, MoneyTransfer
+from django.views import View
 
 
 def main_page(request):
@@ -40,5 +41,22 @@ def login_view(request):
             return render(request, 'index.html')
 
 
-
+class Transfer(View):
+    def post(self, request):
+        member_id = request.session.get('family_member_id')
+        if not member_id:
+            return render(request, 'login.html')
+        description = request.POST['description']
+        amount = request.POST['amount']
+        date = request.POST['date']
+        category_id = request.POST['category']
+        member = FamilyMember.objects.get(id=member_id)
+        category = Category.objects.get(id=category_id)
+        mt = MoneyTransfer.objects.create(date=date,
+                                          owner=member,
+                                          amount=-amount,  # wartość ujemna bo wydatki
+                                          description=description,
+                                          category=category
+                                          )
+        return main_page(request)
 
