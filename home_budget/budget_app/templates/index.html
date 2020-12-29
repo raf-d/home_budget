@@ -4,17 +4,27 @@
     <meta charset="UTF-8">
     <title>Budżet domowy</title>
 </head>
-    {% csrf_token %}
     <link rel="stylesheet" type="text/css" href="../static/style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <h1>Budżet domowy</h1><h3>Wersja 1.0, Autor: Raf</h3>
 <body>
+
     <form method="POST" name="spendings" action="/dodaj-wydatek">
+        {% csrf_token %}
         <h2>Wydatki</h2>
         <input type="text" name="description" placeholder="opis wydatku"><br>
         <input type="number" name="amount" placeholder="kwota"><br>
-        <input type="date" name="date" placeholder="data"><br>
-        <input type="radio" name="category" ...>
+        <input type="date" name="date" value="{{today}}"><br>
+
+        <p>Kategoria wydatku:</p>
+        <input type="hidden" name="category" value="None">
+        {% for category in categories %}
+        <div>
+            <input type="radio" name="category" value="{{category.name}}">
+            <label for="{{category.name}}">{{category.name}}</label>
+        </div>
+        {% endfor %}
+
         <button type="submit">Dodaj wydatek</button>
     </form>
 
