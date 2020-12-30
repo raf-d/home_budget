@@ -1,4 +1,6 @@
 from django.test import TestCase
+from datetime import date, timedelta
+import calendar
 
 # Create your tests here.
 
@@ -20,3 +22,9 @@ from django.test import TestCase
 #
 #
 # print(solution(10))
+
+# a = datetime.date(2000, 2, 1) - datetime.timedelta(days=1)
+# print(a)
+
+b = date.today().replace(month=+1, day=1) - timedelta(1)
+print(b)

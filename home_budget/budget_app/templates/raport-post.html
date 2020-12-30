@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Raport-post</title>
+</head>
+<body>
+    <a href="/">Strona główna</a><br>
+    <a href="/raport">Strona do generowania raportów</a><br>
+
+    <h1>Lista transakcji</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <td>opis</td>
+                <td>data</td>
+                <td>użytkownik</td>
+                <td>kategoria</td>
+                <td>kwota</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for transaction in transactions %}
+            <tr>
+                <td>{{ transaction.description }}</td>
+                <td>{{ transaction.date }}</td>
+                <td>{{ transaction.owner.name }}</td>
+                {% if transaction.category %}
+                    <td style="background-color: {{transaction.category.color}}">
+                        {{ transaction.category.name }}
+                    </td>
+                {% else %}
+                    <td></td>
+                {% endif %}
+                <td>{{ transaction.amount }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table><br>
+
+    <h3>Saldo budżetu: {{ total }} zł </h3>
+
+</body>
+</html>

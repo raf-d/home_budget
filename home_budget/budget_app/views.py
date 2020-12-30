@@ -1,14 +1,14 @@
 from django.shortcuts import render
 from budget_app.models import FamilyMember, Category, MoneyTransfer
 from django.views import View
-from datetime import date
+from datetime import date, timedelta
 
 
 def main_page(request):
     member_id = request.session.get('family_member_id')
     if not member_id:
         return render(request, 'login.html')
-    today = str(date.today())
+    today = str(date.today())  # raczej do usunięcia wraz z poniższym
     categories = Category.objects.all()
     return render(request, 'index.html', {'today': today, 'categories': categories})
 
@@ -71,5 +71,48 @@ class Transfer(View):
                                           description=description,
                                           category=category
                                           )
+        return main_page(request)  # chyba trzeba zmienić na render '/'
+
+
+class Incoming(View):
+    def post(self, request):
+        member_id = request.session.get('family_member_id')
+        if not member_id:
+            return render(request, 'login.html')
+        member = FamilyMember.objects.get(id=member_id)
+        dates = request.POST['date']
+        if dates == '':
+            dates = date.today()
+        amount = int(request.POST['amount'])
+        description = 'Wpływ do budżetu'
+        category = None
+        mt = MoneyTransfer.objects.create(date=dates,
+                                          owner=member,
+                                          amount=amount,
+                                          description=description,
+                                          category=category
+                                          )
         return main_page(request)
 
+
+class Raport(View):
+    def get(self, request):
+        member_id = request.session.get('family_member_id')
+        if not member_id:
+            return render(request, 'login.html')
+        members = FamilyMember.objects.all()
+        categories = Category.objects.all()
+        first_day = date.today().replace(day=1)  # first day of current month
+        last_day = date.today().replace(month=+1, day=1) - timedelta(1)  # last day of current month
+        return render(request, 'raport.html', {'members': members, 'categories': categories,
+                                              'first_day': str(first_day), 'last_day': str(last_day)
+                                              })
+    def post(self, request):
+        transactions = MoneyTransfer.objects.all()
+        q = request.POST['q']
+        if len(q) > 0:
+            transactions = transactions.objects.filter(name__icontains='q')
+        total = 0
+        for i in transactions:
+            total += i.amount
+        return render(request, 'raport-post.html', {'transactions': transactions, 'total': total})

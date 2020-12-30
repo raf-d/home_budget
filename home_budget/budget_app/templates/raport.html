@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Raport</title>
+</head>
+<body>
+    <form method="post">
+        {% csrf_token %}
+        <label>Zawiera słowo
+            <input type="text" name="q">
+        </label><br>
+        <label>Raport od dnia:
+            <input type="date" name="start" value="{{ first_day }}">
+        </label><br>
+        <label>Raport do dnia:
+            <input type="date" name="end" value="{{ last_day }}">
+        </label><br>
+        <p>Kategorie:</p>
+        {% for category in categories %}
+            <label>
+                <input type="checkbox" name="category" value="{{ category.id }}"> {{ category.name }}
+            </label><br>
+        {% endfor %}
+
+        <p>Użytkownik:</p>
+        {% for member in members %}
+            <label>
+                <input type="checkbox" name="family_member" value="{{ member.id }}" checked> {{ member.name }}
+            </label><br>
+        {% endfor %}
+        <label>Minimalna wartość:
+            <input type="number" name="min" value="0">
+        </label><br>
+        <label>Maksymalna wartość:
+            <input type="number" name="max" value="0">
+        </label><br>
+        <button type="submit">Generuj raport</button>
+
+    </form>
+
+</body>
+</html>

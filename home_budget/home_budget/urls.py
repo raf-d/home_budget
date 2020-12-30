@@ -15,12 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from budget_app.views import main_page, login_view, Transfer
+from budget_app.views import main_page, login_view, Transfer, Incoming, Raport
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', main_page),
     path('logowanie/', login_view),
-    path('dodaj-wydatek', Transfer.as_view())
+    path('dodaj-wydatek', Transfer.as_view()),
+    path('dodaj-wplyw', Incoming.as_view()),
+    path('raport', Raport.as_view())
 
 ]
