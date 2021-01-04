@@ -110,8 +110,27 @@ class Raport(View):
     def post(self, request):
         transactions = MoneyTransfer.objects.all()
         q = request.POST['q']
-        if len(q) > 0:
-            transactions = transactions.objects.filter(name__icontains='q')
+        start = request.POST['start']
+        end = request.POST['end']
+        category = request.POST.getlist('category')
+        member = request.POST.getlist('family_member')
+        minValue = request.POST['min']
+        maxValue = request.POST['max']
+        print(category)
+        if q:
+            transactions = transactions.filter(description__icontains=q)
+        if start:
+            transactions = transactions.filter(date__gte=start)
+        if end:
+            transactions = transactions.filter(date__lte=end)
+        if category:
+            transactions = transactions.filter(category__in=category)
+        if member:
+            transactions = transactions.filter(owner__in=member)
+        if minValue and minValue != '0':
+            transactions = transactions.filter(amount__gte=minValue)
+        if maxValue and maxValue != '0':
+            transactions = transactions.filter(amount__lte=maxValue)
         total = 0
         for i in transactions:
             total += i.amount
