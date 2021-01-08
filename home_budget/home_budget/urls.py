@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from budget_app.views import main_page, login_view, Transfer, Incoming, Raport
+from budget_app.views import main_page, login_view, Transfer, Incoming, Raport, Hint
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -23,6 +23,6 @@ urlpatterns = [
     path('logowanie/', login_view),
     path('dodaj-wydatek', Transfer.as_view()),
     path('dodaj-wplyw', Incoming.as_view()),
-    path('raport', Raport.as_view())
-
+    path('raport', Raport.as_view()),
+    path('hint', Hint.as_view())
 ]

@@ -2,6 +2,7 @@ from django.shortcuts import render
 from budget_app.models import FamilyMember, Category, MoneyTransfer
 from django.views import View
 from datetime import date, timedelta
+from django.http import JsonResponse
 
 
 def main_page(request):
@@ -135,3 +136,18 @@ class Raport(View):
         for i in transactions:
             total += i.amount
         return render(request, 'raport-post.html', {'transactions': transactions, 'total': total})
+
+
+class Hint(View):
+    def get(self, request):
+        if request.GET.get('text'):
+            text = request.GET.get('text')
+        transactions = MoneyTransfer.objects.all()
+        print(text)
+        if text:
+            transactions = transactions.filter(description__icontains=text)
+            if len(transactions) > 10:
+                transactions = transactions[0:10]
+        resp = JsonResponse({'hints': [el.description for el in transactions]})
+        return resp
+        # return render(request, 'raport-post.html', {'transactions': transactions})
